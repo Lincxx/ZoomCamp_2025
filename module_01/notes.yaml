@@ -36,7 +36,7 @@ docker run -it \
   -e POSTGRES_DB="ny_taxi" \
   -v $(pwd)/ny_taxi_postges_data:/var/lib/postgresql/data \
   -p 5432:5432 \
-   --network=pg-network \
+  --network=pg-network \
   --name pg-database \
   postgres:13
 
@@ -48,4 +48,26 @@ docker run -it \
   --name pgadmin \
   dpage/pgadmin4
 
+  python ingest_data.py
+  a better would be env variables
+  python ingest_data.py \ 
+    --user=root \
+    --password=root \
+    --host=localhost \
+    --port=5432 \
+    --db=ny_taxi \
+    --table_name=yellow_taxi_data \
 
+
+for the ingest_data.py
+ - python ingest_data.py root root localhost 5432 ny_taxi yellow_taxi_data
+
+docker build -t taxi-ingestion:v001 .
+
+docker run taxi-ingestion:v001
+  root \
+  root \
+  localhost \
+  5432 \
+  ny_taxi \
+  yellow_taxi_data \
