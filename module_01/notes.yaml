@@ -59,7 +59,6 @@ docker run -it \
     --db=ny_taxi \
     --table_name=yellow_taxi_data \
     --url=$URL
-    --url=$URL
 
 
 for the ingest_data.py
@@ -83,3 +82,7 @@ docker run -it
   
 # So basically this is setting thing up and runnning the python script
 # this needs to be explained a little bit more 
+
+docker-compose up
+docker-compose up -d # detached, we get the terminal back
+docker-compose down
