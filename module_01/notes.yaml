@@ -59,6 +59,7 @@ docker run -it \
     --db=ny_taxi \
     --table_name=yellow_taxi_data \
     --url=$URL
+    --url=$URL
 
 
 for the ingest_data.py
