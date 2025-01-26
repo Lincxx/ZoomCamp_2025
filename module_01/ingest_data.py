@@ -1,7 +1,10 @@
+import subprocess
 from time import time
 from sqlalchemy import create_engine
 import pandas as pd
 import argparse
+import os
+import gzip
 
 def main(params):
     user = params.user
@@ -10,11 +13,19 @@ def main(params):
     port = params.port
     db = params.db
     table_name = params.table_name
-    # url = params.url
+    url = params.url
+    csv_name = 'output.csv.gz'
 
-    print(pd.__version__)
+    # os.system(f'wget {url} -O {csv_name}')
+    subprocess.run(['wget', url, '-O', csv_name])
 
-    df = pd.read_csv('./yellow_tripdata_2021-01.csv', nrows=100)
+    # Decompress the file using gzip
+    with gzip.open("output.csv.gz", "rb") as f_in, open("output.csv", "wb") as f_out:
+        f_out.write(f_in.read())
+
+    # print(pd.__version__)
+
+    df = pd.read_csv(csv_name, nrows=100)
     print(df)
 
     # convert to datetime
@@ -37,7 +48,7 @@ def main(params):
     print(schema)
 
     # we are doing it in chunks, that way we can avoid memory issues
-    df_iter = pd.read_csv('./yellow_tripdata_2021-01.csv', iterator=True, chunksize=100000)
+    df_iter = pd.read_csv(csv_name, iterator=True, chunksize=100000)
 
     df = next(df_iter)
 
@@ -74,13 +85,13 @@ if __name__ == '__main__':
     # args 
     # user, password, host, port, dbname, table_name, url of csv
 
-    parser.add_argument('user',help='username for postgres')
-    parser.add_argument('password',help='password for postgres')
-    parser.add_argument('host',help='host for postgres')
-    parser.add_argument('port',help='port for postgres')
-    parser.add_argument('db',help='database name for postgres')
-    parser.add_argument('table_name',help='table name for postgres')
-    # parser.add_argument('url',help='url for csv file')
+    parser.add_argument('--user',help='username for postgres')
+    parser.add_argument('--password',help='password for postgres')
+    parser.add_argument('--host',help='host for postgres')
+    parser.add_argument('--port',help='port for postgres')
+    parser.add_argument('--db',help='database name for postgres')
+    parser.add_argument('--table_name',help='table name for postgres')
+    parser.add_argument('--url',help='url for csv file')
 
     args = parser.parse_args()
     main(args)
