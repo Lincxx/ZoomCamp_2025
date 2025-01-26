@@ -64,10 +64,19 @@ for the ingest_data.py
 
 docker build -t taxi-ingestion:v001 .
 
-docker run taxi-ingestion:v001
-  root \
-  root \
-  localhost \
-  5432 \
-  ny_taxi \
-  yellow_taxi_data \
+
+# --network=pg-network \   taxi-ingestion:v001 are paremeters for docker
+# the rest are parameters for the job
+docker run -it 
+  --network=pg-network \
+  taxi-ingestion:v001
+    --user=root \
+    --password=root \
+    --host=pg-database \
+    --port=5432 \
+    --db=ny_taxi \
+    --table_name=yellow_taxi_data \
+    --url=$URL
+  
+# So basically this is setting thing up and runnning the python script
+# this needs to be explained a little bit more 
